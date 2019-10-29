@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment.prod';
 import { YoutubeDataAPI } from 'youtube-v3-api';
-import { firestore } from 'firebase/app';
 import { AuthService } from '../shared/auth.service';
 
 const API_KEY = environment.youtubeApi;

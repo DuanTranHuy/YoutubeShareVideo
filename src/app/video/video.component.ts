@@ -1,8 +1,6 @@
-import { Component, OnInit, SecurityContext } from '@angular/core';
-import { Video, Vote, VoteCollection } from '../share-video/video';
-import { Observable } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Video, VoteCollection } from '../share-video/video';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { map } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 import { firestore } from 'firebase/app';
 import { AuthService } from '../shared/auth.service';
@@ -13,7 +11,7 @@ import { AuthService } from '../shared/auth.service';
   styleUrls: ['./video.component.css']
 })
 export class VideoComponent implements OnInit {
-  videosCollection: Observable<Video[]>;
+  videosCollection: Video[] = [];
   videos: Video[];
   user: firebase.User;
   voteCollection: AngularFirestoreCollection<VoteCollection>;
@@ -29,115 +27,91 @@ export class VideoComponent implements OnInit {
     this.authService.userData.subscribe(x => {
       this.user = x;
     });
+
     this.voteCollection = this.afs.collection<VoteCollection>('votes');
     this.voteCollection.get().toPromise().then(x => {
       x.docs.forEach(item => {
         this.votes.push(item.data() as VoteCollection);
       });
     });
-    this.videosCollection = this.afs.collection<Video>('video', ref => ref.orderBy('time', 'desc').limit(15)).snapshotChanges().pipe(
-      map(
-        changes => {
-          return changes.map(change => {
-            const data = change.payload.doc.data();
-            const id = change.payload.doc.id;
-            data.url = this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${data.videoId}`);
-            if (this.votes) {
-              const vote = this.votes.find(m => m.id === id);
-              if (vote) {
-                data.votes = vote.votes;
-              }
-            }
-            if (data.votes && data.votes.length > 0) {
-              let numberLike = 0;
-              let numberDislike = 0;
-              data.votes.forEach(n => {
-                if (n.value) {
-                  numberLike = numberLike + 1;
-                } else {
-                  numberDislike = numberDislike + 1;
-                }
-                if (this.user) {
-                  if (n.value && n.by === this.user.uid) {
-                    data.liked = true;
-                  }
-                  if (!n.value && n.by === this.user.uid) {
-                    data.disliked = true;
-                  }
-                }
-              });
-              data.like = numberLike;
-              data.dislike = numberDislike;
-            } else {
-              data.like = 0;
-              data.dislike = 0;
-            }
-            return { id, ...data };
-
-          });
-        }
-      )
+    this.afs.collection<Video>('video', ref => ref.orderBy('time', 'desc').limit(15)).get().toPromise().then(x => {
+      x.docs.forEach(item => {
+        const video = item.data() as Video;
+        video.id = item.id;
+        video.url = this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${video.videoId}`);
+        this.videosCollection.push(video);
+      });
+    }).then(() => {
+      this.afs.collection<VoteCollection>('votes').snapshotChanges().subscribe(x => {
+        x.forEach(element => {
+          const voteCollection = element.payload.doc.data();
+          const item = this.videosCollection.find(m => m.id === voteCollection.id);
+          this.update(item, voteCollection);
+        });
+      });
+    }
     );
+
   }
+
 
   like(item: Video) {
     item.liked = true;
     item.like = item.like + 1;
     return this.afs.collection('votes').doc(item.id).update(
-      { votes: firestore.FieldValue.arrayUnion({ by: this.user.uid, value: true }) }).then(x =>  this.update(item) );
+      { votes: firestore.FieldValue.arrayUnion({ by: this.user.uid, value: true }) });
   }
 
   unlike(item: Video) {
     item.liked = false;
     item.like = item.like - 1;
     return this.afs.collection('votes').doc(item.id).update(
-      { votes: firestore.FieldValue.arrayRemove({ by: this.user.uid, value: true }) }).then(x =>  this.update(item) );
+      { votes: firestore.FieldValue.arrayRemove({ by: this.user.uid, value: true }) });
   }
 
   dislike(item: Video) {
     item.disliked = true;
     item.dislike = item.dislike + 1;
     return this.afs.collection('votes').doc(item.id).update(
-      { votes: firestore.FieldValue.arrayUnion({ by: this.user.uid, value: false }) }).then(x =>  this.update(item) );
+      { votes: firestore.FieldValue.arrayUnion({ by: this.user.uid, value: false }) });
   }
 
   undislike(item: Video) {
     item.disliked = false;
     item.dislike = item.dislike - 1;
     return this.afs.collection('votes').doc(item.id).update(
-      { votes: firestore.FieldValue.arrayRemove({ by: this.user.uid, value: false }) }).then(x =>  this.update(item) );
+      { votes: firestore.FieldValue.arrayRemove({ by: this.user.uid, value: false }) });
   }
-  update(item: Video) {
-    return this.voteCollection.doc(item.id).get().toPromise().then(x => {
-      const data = x.data() as VoteCollection;
-      if (data.votes && data.votes.length > 0) {
-        let numberLike = 0;
-        let numberDislike = 0;
-        data.votes.forEach(n => {
-          if (n.value) {
-            numberLike = numberLike + 1;
-          } else {
-            numberDislike = numberDislike + 1;
-          }
-          if (this.user) {
-            if (n.value && n.by === this.user.uid) {
-              item.liked = true;
-              item.disliked = false;
 
-            }
-            if (!n.value && n.by === this.user.uid) {
-              item.disliked = true;
-              item.liked = false;
+  update(item: Video, data: VoteCollection) {
+    if (data.votes && data.votes.length > 0) {
+      let numberLike = 0;
+      let numberDislike = 0;
+      data.votes.forEach(x => {
+        if (x.value) {
+          numberLike = numberLike + 1;
+        } else {
+          numberDislike = numberDislike + 1;
+        }
+        if (this.user) {
+          if (x.value && x.by === this.user.uid) {
+            item.liked = true;
+            item.disliked = false;
 
-            }
           }
-        });
-        item.like = numberLike;
-        item.dislike = numberDislike;
-      } else {
-        item.like = 0;
-        item.dislike = 0;
-      }
-    });
+          if (!x.value && x.by === this.user.uid) {
+            item.disliked = true;
+            item.liked = false;
+          }
+        }
+      });
+      item.like = numberLike;
+      item.dislike = numberDislike;
+    } else {
+      item.liked = false;
+      item.disliked = false;
+      item.like = 0;
+      item.dislike = 0;
+    }
   }
 }
