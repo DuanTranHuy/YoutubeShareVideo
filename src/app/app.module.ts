@@ -16,7 +16,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
     AppComponent,
     VideoComponent,
     HeaderComponent,
-    ShareVideoComponent
+    ShareVideoComponent,
   ],
   imports: [
     BrowserModule,

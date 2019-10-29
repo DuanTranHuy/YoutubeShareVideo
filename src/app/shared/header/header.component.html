@@ -1,1 +1,34 @@
-<p>header works!</p>
+
+    <!-- Header bar section start -->
+    <div class="header-bar-arar">
+        <div class="container">
+            <div class="row header-bar">
+                <div class="col-lg-4" style="cursor: pointer;">
+                    <div (click)="redirectTohome()" class="header-bar-left">
+                        <h2><i class="fa fa-home"></i>Funny Movies</h2>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="header-bar-login">
+                       <a href="mailto:example@gmail.com">Welcome example@gmail.com</a>&nbsp;
+                       <button><a [routerLink]="['/share']" routerLinkActive="router-link-active">Share a Movie</a></button>&nbsp;
+                       <button><a href="javascript: void(0)" (click)="signOut()">Logout</a></button>
+                    </div>
+                    <div class="header-bar-right">
+                      <form action="">
+                          <div class="single-form">
+                               <input type="email" placeholder="Email">
+                           </div>
+                          <div class="single-form">
+                               <input type="password" placeholder="Password">
+                           </div>
+                          <div class="single-form">
+                               <input type="submit" value="Login/Register">
+                           </div>
+                      </form>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header bar section End -->

@@ -1,1 +1,323 @@
 /* You can add global styles to this file, and also import other style files */
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css?family=Roboto:300i,400,400i,500,500i,700&display=swap");
+body {
+  font-family: Roboto;
+  color: #333;
+  letter-spacing: .5px;
+  font-size: 16px;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+/* XL Device :1200px. */
+@media (min-width: 1200px) and (max-width: 1449px) {
+
+
+
+}
+
+/* LG Device :992px. */
+@media (min-width: 992px) and (max-width: 1200px) {
+
+
+}
+
+
+/* MD Device :768px. */
+@media (min-width: 768px) and (max-width: 991px) {
+.single-movies-itm-text p {
+	font-size: 14px;
+}
+.single-form input {
+	max-width: 140px;
+}
+.single-form input[type="submit"] {
+	width: auto;
+}
+.header-bar-left h2 {
+	margin: 0;
+	font-size: 24px;
+}
+.vote-txt button {
+	font-size: 32px;
+}
+.vote-txt {
+	display: inline-block;
+	position: absolute;
+	top: -3%;
+	right: 0%;
+}
+
+
+
+
+
+}
+
+
+
+/* SM Small Device :320px. */
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+.header-bar-left {
+	text-align: center;
+	margin-bottom: 15px;
+}
+.single-form {
+	float: left;
+	padding-left: 0;
+	width: 100%;
+	margin-bottom: 10px;
+}
+.single-form input {
+	width: 100%;
+}
+
+.single-movies-itm-left {
+	width: 100%;
+	float: left;
+	margin-bottom: 30px;
+}
+.single-movies-itm-text {
+	width: 100%;
+	float: left;
+	padding-left: 0;
+	position: relative;
+}
+
+.single-movies-itm-text {
+	width: 100%;
+	float: left;
+	padding-left: 0;
+	position: relative;
+	margin-bottom: 25px;
+}
+.header-bar-left h2 {
+	margin: 0;
+	font-size: 24px;
+}
+.single-movies-itm-left {
+	width: 100%;
+	float: left;
+}
+
+.single-movies-itm-text {
+	width: 100%;
+	float: left;
+	padding-left: 0;
+	position: relative;
+	margin-top: 25px;
+}
+.single-movies-itm-left {
+	width: 100% !important;
+	float: left;
+}
+.vote-txt {
+	top: -2%;
+	right: 0;
+}
+.vote-txt button {
+	font-size: 24px;
+}
+
+
+}
+
+/* SM Small Device :550px. */
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+
+}
+
+
+/*================================ Page_1 style Start =========================*/
+.row.header-bar {
+    padding: 15px 0;
+    border-bottom: 1px solid #333;
+}
+.single-form {
+    float: left;
+    padding-left: 15px;
+}
+
+.header-bar-right {
+    float: right;
+}
+.single-form input {
+    padding: 5px;
+    padding-left: 10px;
+    outline: none;
+    font-size: 15px;
+    letter-spacing: .5px;
+    border:1px solid #ddd;
+}
+.single-form input[type="submit"] {
+    background: none;
+    border: none;
+    color: #333 !important;
+     border:1px solid #ddd;
+     background: #ddd;
+     cursor: pointer;
+}
+
+.header-bar-left h2 {
+    margin: 0;
+    font-size: 28px;
+}
+.header-bar-left h2 i {
+    margin-right: 10px;
+}
+.movies-area {
+    padding: 80px 0;
+}
+
+.songle-movies-item {
+    max-width: 960px;
+    margin: 0 auto;
+}
+.movies-itm-warp {
+    width: 100%;
+    display: inline-block;
+    margin-bottom: 35px;
+}
+.single-movies-itm-left {
+    width: 45%;
+    float: left;
+}
+
+.single-movies-itm-text {
+    width: 55%;
+    float: left;
+}
+
+.single-movies-itm-left iframe {
+    width: 100%;
+}
+.single-movies-itm-text {
+    width: 55%;
+    float: left;
+    padding-left: 35px;
+    position: relative;
+}
+.single-movies-itm-text h4 {
+    color: #C64C51;
+}
+.single-movies-itm-text span {
+    font-weight: 500;
+    font-size: 18px;
+}
+.like-unlike button {
+    background: transparent;
+    border: none;
+    margin-right: 15px;
+    cursor: pointer;
+    font-size: 18px;
+    outline: none;
+}
+.like-unlike button i {
+    margin-left: 6px;
+    position: relative;
+    top: -1px;
+}
+.like-unlike {
+    margin: 5px 0;
+}
+.vote-txt {
+    display: inline-block;
+    position: absolute;
+    top: 6%;
+    right: 15%;
+}
+.vote-txt button {
+    background: transparent;
+    border: none;
+    font-size: 40px;
+    margin: 0 7px;
+    cursor: pointer;
+    outline: none;
+}
+.header-bar-login {
+    float: right;
+}
+.header-bar-login a {
+    color: #000;
+    text-decoration: none;
+}
+.header-bar-login button {
+    margin-left: 15px;
+    background: transparent;
+    background: #ddd;
+    padding: 5px 10px;
+    border: none;
+}
+.subscribtion-box {
+    max-width: 500px;
+    border: 1px solid #000;
+    position: relative;
+    margin: 0 auto;
+    margin-top: 150px;
+    padding: 45px 35px;
+}
+h4.title {
+    position: absolute;
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: capitalize;
+    left: 5%;
+    top: -11px;
+    background: #fff;
+    display: inline-block;
+    padding: 2px 10px;
+}
+.subscribtion-box input {
+    width: 280px;
+    padding: 5px;
+    padding-left: 10px;
+    outline: none;
+    border: 1px solid #000;
+}
+.subscribtion-box input[type="submit"] {
+    margin-top: 25px;
+    cursor: pointer;
+}
+.subscribtion-box form {
+    max-width: 300px;
+    margin: 0 auto;
+}
+.subscribtion-box p {
+    margin-bottom: 5px;
+    font-size: 15px;
+}
+.header-bar-left a {
+	color: #000;
+	margin: 0;
+}
+.header-bar-arar {
+	text-align: center;
+}
+.header-bar-left {
+	margin-bottom: 10px;
+}
+.header-bar-login button {
+	margin-top: 10px;
+	margin-left: 0;
+}
+/*================================ Page_1 style Start =========================*/

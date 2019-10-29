@@ -2,17 +2,19 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { ShareVideoComponent } from './share-video/share-video.component';
 import { AppComponent } from './app.component';
+import { VideoComponent } from './video/video.component';
 
 
 const routes: Routes = [
   {
-    path: '', component: AppComponent,
-    children: [
-      {
-          path: 'share', component: ShareVideoComponent
-      }
-    ]
+    path: 'share', component: ShareVideoComponent
   },
+  {
+    path: 'video', component: VideoComponent
+  },
+  {
+    path: '', component: VideoComponent
+  }
 ];
 
 @NgModule({

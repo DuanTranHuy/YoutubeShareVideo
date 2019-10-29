@@ -45,6 +45,6 @@ export class AuthService {
   /* Sign out */
   SignOut() {
     this.angularFireAuth.auth.signOut();
-    this.router.navigate(['/auth/login']);
+    this.router.navigateByUrl('/');
   }
 }
