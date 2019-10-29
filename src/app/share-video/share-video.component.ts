@@ -34,9 +34,7 @@ export class ShareVideoComponent implements OnInit {
       return;
     }
     return api.searchVideo(videoId).then(data => {
-      console.log(data);
       const result = data as any;
-      console.log(result.items[0].snippet.description);
       return this.afs.collection('video').add({
         videoId,
         videoDescription: result.items[0].snippet.description,
@@ -44,7 +42,7 @@ export class ShareVideoComponent implements OnInit {
         videoName: result.items[0].snippet.title,
         time: Date.now()
       }).then((docRef) => {
-        return this.afs.collection('votes').doc(docRef.id).set({});
+        return this.afs.collection('votes').doc(docRef.id).set({id: docRef.id});
       });
     }, () => {
       alert('Wrong url');
@@ -59,39 +57,5 @@ export class ShareVideoComponent implements OnInit {
     } else {
       return null;
     }
-  }
-
-  like() {
-    // if (!this.user) {
-    //   return;
-    // }
-    // if (item.votes) {
-    //   if (!item.votes.find(b => b.by === this.user.uid)) {
-    //     return this.afs.collection('video').doc(item.id).update(
-    //       { votes: firestore.FieldValue.arrayUnion({ by: this.user.uid, value: rate }) });
-    //   }
-    // } else {
-    //   return this.afs.collection('video').doc(item.id).update(
-    //     { votes: firestore.FieldValue.arrayUnion({ by: this.user.uid, value: rate }) });
-    // }
-    // this.videosCollection.subscribe(x => {
-    //   console.log(x);
-    // });
-    return this.afs.collection('video').doc('IummScF3Ygt0qmdE5MXU').update(
-      { votes: firestore.FieldValue.arrayUnion({ by: this.user.uid, value: true }) });
-  }
-  unlike() {
-    return this.afs.collection('video').doc('IummScF3Ygt0qmdE5MXU').update(
-      { votes: firestore.FieldValue.arrayRemove({ by: this.user.uid, value: true }) })
-  }
-
-  dislike() {
-    return this.afs.collection('video').doc('IummScF3Ygt0qmdE5MXU').update(
-      { votes: firestore.FieldValue.arrayUnion({ by: this.user.uid, value: false }) });
-  }
-
-  undislike() {
-    return this.afs.collection('video').doc('IummScF3Ygt0qmdE5MXU').update(
-      { votes: firestore.FieldValue.arrayRemove({ by: this.user.uid, value: false }) });
   }
 }

@@ -18,3 +18,7 @@ export class Vote {
   by: string;
   value: boolean;
 }
+export class VoteCollection {
+  id: string;
+  votes?: Vote[];
+}
