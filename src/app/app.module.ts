@@ -11,12 +11,14 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment.prod';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { HomeComponent } from './home/home.component';
 @NgModule({
   declarations: [
     AppComponent,
     VideoComponent,
     HeaderComponent,
     ShareVideoComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

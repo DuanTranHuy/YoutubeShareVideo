@@ -10,11 +10,9 @@
             <div class="col-lg-12">
                <div class="subscribtion-box">
                     <h4 class="title">Share a youtube Movie</h4>
-                    <form action="">
                         <p>Youtube Link</p>
-                        <input type="link">
-                        <input type="submit" value="Share">
-                    </form>
+                        <input name="url" [(ngModel)]="url" type="link">
+                        <input (click)="share()" type="submit" value="Share">
                 </div>
 
             </div>

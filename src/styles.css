@@ -51,9 +51,7 @@ body {
 .single-form input {
 	max-width: 140px;
 }
-.single-form input[type="submit"] {
-	width: auto;
-}
+
 .header-bar-left h2 {
 	margin: 0;
 	font-size: 24px;

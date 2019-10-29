@@ -9,23 +9,21 @@
                     </div>
                 </div>
                 <div class="col-lg-8">
-                    <div class="header-bar-login">
-                       <a href="mailto:example@gmail.com">Welcome example@gmail.com</a>&nbsp;
+                    <div  *ngIf="(authService.userData | async)" class="header-bar-login">
+                       <a>Welcome {{(authService.userData| async)?.email}}</a>&nbsp;
                        <button><a [routerLink]="['/share']" routerLinkActive="router-link-active">Share a Movie</a></button>&nbsp;
                        <button><a href="javascript: void(0)" (click)="signOut()">Logout</a></button>
                     </div>
-                    <div class="header-bar-right">
-                      <form action="">
+                    <div  *ngIf="!(authService.userData | async)" class="header-bar-right">
                           <div class="single-form">
-                               <input type="email" placeholder="Email">
+                               <input type="email" name="email" [(ngModel)]="email" placeholder="Email">
                            </div>
                           <div class="single-form">
-                               <input type="password" placeholder="Password">
+                               <input type="password" name="password" [(ngModel)]="password" placeholder="Password">
                            </div>
                           <div class="single-form">
-                               <input type="submit" value="Login/Register">
+                               <input type="button"(click)="loginRegister()" value="Login/Register">
                            </div>
-                      </form>
                    </div>
                 </div>
             </div>

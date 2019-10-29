@@ -1,3 +1,4 @@
+import { SafeResourceUrl } from '@angular/platform-browser';
 
 export class Video {
   id: string;
@@ -11,6 +12,7 @@ export class Video {
   liked = false;
   disliked = false;
   time: Date;
+  url: SafeResourceUrl;
 }
 export class Vote {
   by: string;

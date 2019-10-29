@@ -8,9 +8,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+  email: string;
+  password: string;
 
-  constructor(private router: Router,
-              public authService: AuthService) { }
+  constructor(private router: Router, public authService: AuthService) { }
 
   ngOnInit() {
   }
@@ -19,7 +20,9 @@ export class HeaderComponent implements OnInit {
     this.authService.SignOut();
   }
   redirectTohome() {
-    console.log('123');
     this.router.navigateByUrl('/');
+  }
+  loginRegister() {
+    return this.authService.SignIn(this.email, this.password);
   }
 }

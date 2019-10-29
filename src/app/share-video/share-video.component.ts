@@ -1,11 +1,9 @@
-import { Component, OnInit, Query } from '@angular/core';
-import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
+import { Component, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment.prod';
 import { YoutubeDataAPI } from 'youtube-v3-api';
-import { Video } from './video';
 import { firestore } from 'firebase/app';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { AuthService } from '../shared/auth.service';
 
 const API_KEY = environment.youtubeApi;
 
@@ -16,41 +14,17 @@ const api = new YoutubeDataAPI(API_KEY);
   styleUrls: ['./share-video.component.css']
 })
 export class ShareVideoComponent implements OnInit {
-  videosCollection: Observable<Video[]>;
   user: firebase.User;
   url: string;
   constructor(
     public afs: AngularFirestore,
+    public authService: AuthService
   ) { }
 
   ngOnInit() {
-    this.videosCollection = this.afs.collection<Video>('video', ref => ref.orderBy('time', 'desc')).snapshotChanges().pipe(
-      map(
-        changes => {
-          return changes.map(change => {
-            const data = change.payload.doc.data();
-            const id = change.payload.doc.id;
-            if (data.votes && data.votes.length > 0) {
-              let numberLike = 0;
-              let numberDislike = 0;
-              data.votes.forEach(x => {
-                if (x) {
-                  numberLike = numberLike + 1;
-                } else {
-                  numberDislike = numberDislike + 1;
-                }
-              });
-              data.like = numberLike;
-              data.dislike = numberDislike;
-            } else {
-              data.like = 0;
-              data.dislike = 0;
-            }
-            return { id, ...data };
-          });
-        }
-      )
-    );
+    this.authService.userData.subscribe(x => {
+      this.user = x;
+    });
   }
 
   share() {
@@ -65,12 +39,14 @@ export class ShareVideoComponent implements OnInit {
       console.log(result.items[0].snippet.description);
       return this.afs.collection('video').add({
         videoId,
-        videoDescription: result.items[0].snippet.description.slice(0, 50),
-        sharedBy: 'duan@gmail.com',
+        videoDescription: result.items[0].snippet.description,
+        sharedBy: this.user.email,
         videoName: result.items[0].snippet.title,
         time: Date.now()
+      }).then((docRef) => {
+        return this.afs.collection('votes').doc(docRef.id).set({});
       });
-    }, (err) => {
+    }, () => {
       alert('Wrong url');
     });
   }
@@ -98,24 +74,24 @@ export class ShareVideoComponent implements OnInit {
     //   return this.afs.collection('video').doc(item.id).update(
     //     { votes: firestore.FieldValue.arrayUnion({ by: this.user.uid, value: rate }) });
     // }
-    this.videosCollection.subscribe(x => {
-      console.log(x);
-    });
+    // this.videosCollection.subscribe(x => {
+    //   console.log(x);
+    // });
     return this.afs.collection('video').doc('IummScF3Ygt0qmdE5MXU').update(
-      { votes: firestore.FieldValue.arrayUnion({ by: 'GDUCoZisxGONQ6kGk0SeV8BJn2d2', value: true }) });
+      { votes: firestore.FieldValue.arrayUnion({ by: this.user.uid, value: true }) });
   }
   unlike() {
     return this.afs.collection('video').doc('IummScF3Ygt0qmdE5MXU').update(
-      { votes: firestore.FieldValue.arrayRemove({ by: 'GDUCoZisxGONQ6kGk0SeV8BJn2d2', value: true }) })
+      { votes: firestore.FieldValue.arrayRemove({ by: this.user.uid, value: true }) })
   }
 
   dislike() {
     return this.afs.collection('video').doc('IummScF3Ygt0qmdE5MXU').update(
-      { votes: firestore.FieldValue.arrayUnion({ by: 'GDUCoZisxGONQ6kGk0SeV8BJn2d2', value: false }) });
+      { votes: firestore.FieldValue.arrayUnion({ by: this.user.uid, value: false }) });
   }
 
   undislike() {
     return this.afs.collection('video').doc('IummScF3Ygt0qmdE5MXU').update(
-      { votes: firestore.FieldValue.arrayRemove({ by: 'GDUCoZisxGONQ6kGk0SeV8BJn2d2', value: false }) });
+      { votes: firestore.FieldValue.arrayRemove({ by: this.user.uid, value: false }) });
   }
 }

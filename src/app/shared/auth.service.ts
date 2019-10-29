@@ -38,7 +38,9 @@ export class AuthService {
         this.router.navigate(['/']);
       })
       .catch(err => {
-        console.log('Something is wrong:', err.message);
+        if (err.code === 'auth/user-not-found') {
+          this.SignUp(email, password);
+        }
       });
   }
 

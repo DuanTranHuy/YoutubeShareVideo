@@ -3,17 +3,22 @@ import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { ShareVideoComponent } from './share-video/share-video.component';
 import { AppComponent } from './app.component';
 import { VideoComponent } from './video/video.component';
+import { HomeComponent } from './home/home.component';
 
 
 const routes: Routes = [
   {
-    path: 'share', component: ShareVideoComponent
-  },
-  {
-    path: 'video', component: VideoComponent
-  },
-  {
-    path: '', component: VideoComponent
+    path: '', component: HomeComponent, children: [
+      {
+        path: 'share', component: ShareVideoComponent
+      },
+      {
+        path: 'video', component: VideoComponent
+      },
+      {
+        path: '', component: VideoComponent
+      }
+    ]
   }
 ];
 
