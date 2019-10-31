@@ -9,12 +9,12 @@
                     </div>
                 </div>
                 <div class="col-lg-8">
-                    <div  *ngIf="(authService.userData | async)" class="header-bar-login">
-                       <a>Welcome {{(authService.userData| async)?.email}}</a>&nbsp;
+                    <div  *ngIf="(authService.loggedIn | async)" class="header-bar-login">
+                       <a>Welcome {{authService.email()}}</a>&nbsp;
                        <button><a [routerLink]="['/share']" routerLinkActive="router-link-active">Share a Movie</a></button>&nbsp;
                        <button><a href="javascript: void(0)" (click)="signOut()">Logout</a></button>
                     </div>
-                    <div  *ngIf="!(authService.userData | async)" class="header-bar-right">
+                    <div  *ngIf="!(authService.loggedIn | async)" class="header-bar-right">
                           <div class="single-form">
                                <input type="email" name="email" [(ngModel)]="email" placeholder="Email">
                            </div>

@@ -1,29 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { environment } from 'src/environments/environment.prod';
-import { YoutubeDataAPI } from 'youtube-v3-api';
-import { AuthService } from '../shared/auth.service';
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { RequestResult } from '../shared/request-result';
 
-const API_KEY = environment.youtubeApi;
-
-const api = new YoutubeDataAPI(API_KEY);
 @Component({
   selector: 'app-share-video',
   templateUrl: './share-video.component.html',
   styleUrls: ['./share-video.component.css']
 })
 export class ShareVideoComponent implements OnInit {
-  user: firebase.User;
   url: string;
   constructor(
-    public afs: AngularFirestore,
-    public authService: AuthService
+    private http: HttpClient,
   ) { }
 
   ngOnInit() {
-    this.authService.userData.subscribe(x => {
-      this.user = x;
-    });
+
   }
 
   share() {
@@ -32,20 +24,7 @@ export class ShareVideoComponent implements OnInit {
       alert('Cant not exact url');
       return;
     }
-    return api.searchVideo(videoId).then(data => {
-      const result = data as any;
-      return this.afs.collection('video').add({
-        videoId,
-        videoDescription: result.items[0].snippet.description,
-        sharedBy: this.user.email,
-        videoName: result.items[0].snippet.title,
-        time: Date.now()
-      }).then((docRef) => {
-        return this.afs.collection('votes').doc(docRef.id).set({id: docRef.id});
-      });
-    }, () => {
-      alert('Wrong url');
-    });
+    return this.shareVideo(videoId);
   }
 
   extractVideoID() {
@@ -55,6 +34,18 @@ export class ShareVideoComponent implements OnInit {
       return match[7];
     } else {
       return null;
+    }
+  }
+
+  async shareVideo(code: string) {
+    try {
+      const res = await this.http.post<RequestResult>(environment.apiUrl + '/Videos/share', { code }).toPromise();
+      if (res.state === 1) {
+        alert(res.message);
+      }
+      return res;
+    } catch (error) {
+      return error;
     }
   }
 }

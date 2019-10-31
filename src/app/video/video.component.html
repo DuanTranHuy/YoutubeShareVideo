@@ -5,14 +5,14 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="songle-movies-item">
-          <div *ngFor="let item of videosCollection" class="movies-itm-warp">
+          <div *ngFor="let item of video" class="movies-itm-warp">
             <div class="single-movies-itm-left">
               <iframe width="560" height="315" [src]="item.url" frameborder="0"
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen></iframe>
             </div>
             <div class="single-movies-itm-text">
-              <h4>{{item.videoName}}</h4>
+              <h4>{{item.name}}</h4>
               <h6>Shared by: {{item.sharedBy}}</h6>
               <div class="like-unlike">
                 <button>{{item.like}}<i class="fa fa-thumbs-up"></i></button>
@@ -20,9 +20,9 @@
               </div>
               <div class="des-txt">
                 <h5>Description</h5>
-                <p>{{item.videoDescription.slice(0,400)}}</p>
+                <p>{{item.description.slice(0,400)}}</p>
               </div>
-              <div *ngIf="(authService.userData | async)" class="vote-txt">
+              <div *ngIf="(authService.loggedIn | async)" class="vote-txt">
                 <button (click)="like(item)" *ngIf="!item.liked && !item.disliked"><i
                     class="fa fa-thumbs-up"></i></button>
                 <button (click)="dislike(item)" *ngIf="!item.liked && !item.disliked "><i
@@ -31,7 +31,6 @@
                     style="color: blue;"></i></button>
                 <button (click)="undislike(item)" *ngIf="item.disliked"><i class="fa fa-thumbs-down"
                     style="color:red;"></i></button>
-
               </div>
             </div>
           </div>

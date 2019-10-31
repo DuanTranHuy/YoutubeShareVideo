@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/77d9430e-6865-4d92-b821-0329e028aa43/resourceGroups/YoutubeShareVideo/providers/Microsoft.Web/sites/youtubesharevideo",
+    "appService.deploySubpath": "dist\\YoutubeShareVideo"
+}

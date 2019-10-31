@@ -1,24 +1,24 @@
 import { SafeResourceUrl } from '@angular/platform-browser';
 
 export class Video {
-  id: string;
-  videoId: number;
-  videoName: string;
-  videoDescription: string;
+  id: number;
+  code: string;
+  name: string;
+  description: string;
   sharedBy: string;
-  votes?: Vote[];
+  vote?: Vote[];
   like?: number;
   dislike?: number;
   liked = false;
   disliked = false;
-  time: Date;
   url: SafeResourceUrl;
+  shareDate: Date;
+  editDate: Date;
 }
 export class Vote {
-  by: string;
-  value: boolean;
+  id: number;
+  userCredentialId: number;
+  videoId: number;
+  action: boolean;
 }
-export class VoteCollection {
-  id: string;
-  votes?: Vote[];
-}
+

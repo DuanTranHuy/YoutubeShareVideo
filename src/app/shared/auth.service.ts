@@ -1,52 +1,87 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
+import { RequestResult } from './request-result';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  userData: Observable<firebase.User>;
+  public loggedIn = new BehaviorSubject<boolean>(false);
+
 
   constructor(
-    private angularFireAuth: AngularFireAuth,
-    private router: Router) {
-    this.userData = angularFireAuth.authState;
-  }
+    private http: HttpClient, private jwtHelper: JwtHelperService) {
+    if (!!localStorage.getItem(environment.token)) {
+      if (this.jwtHelper.isTokenExpired(this.jwtHelper.tokenGetter())) {
+        localStorage.removeItem(environment.token);
+        this.loggedIn.next(false);
+      } else {
+        this.loggedIn.next(true);
+      }
+    } else {
+      localStorage.removeItem(environment.token);
+      this.loggedIn.next(false);
+    }
 
-  /* Sign up */
-  SignUp(email: string, password: string) {
-    this.angularFireAuth
-      .auth
-      .createUserWithEmailAndPassword(email, password)
-      .then(res => {
-        this.router.navigate(['/']);
-      })
-      .catch(error => {
-        console.log('Something is wrong:', error.message);
-      });
+    setInterval(() => {
+      if (!!localStorage.getItem(environment.token)) {
+        if (this.jwtHelper.isTokenExpired(this.jwtHelper.tokenGetter())) {
+          localStorage.removeItem(environment.token);
+          this.loggedIn.next(false);
+        }
+      } else {
+        localStorage.removeItem(environment.token);
+        this.loggedIn.next(false);
+      }
+    }, 5000);
   }
 
   /* Sign in */
   SignIn(email: string, password: string) {
-    this.angularFireAuth
-      .auth
-      .signInWithEmailAndPassword(email, password)
-      .then(res => {
-        this.router.navigate(['/']);
-      })
-      .catch(err => {
-        if (err.code === 'auth/user-not-found') {
-          this.SignUp(email, password);
+    return this.http.post<RequestResult>(environment.apiUrl + '/UserCredentials/Login',
+      { email, password }).toPromise().then(res => {
+        if (res.state === 1) {
+          localStorage.setItem(environment.token, res.data);
+          this.loggedIn.next(true);
         }
-      });
+        return res;
+      },
+        error => {
+          return error;
+        });
+  }
+
+  isValidToken(): boolean {
+    if (localStorage.getItem(environment.token)) {
+      return true;
+    }
+    return false;
+  }
+
+  getToken(): string {
+    return localStorage.getItem(environment.token);
+  }
+
+  email(): string {
+    if (localStorage.getItem(environment.token)) {
+      return this.jwtHelper.decodeToken(this.getToken()).nameid;
+    }
+  }
+
+  id() {
+    if (localStorage.getItem(environment.token)) {
+      return this.jwtHelper.decodeToken(this.getToken()).unique_name as number;
+    }
+    return 0;
   }
 
   /* Sign out */
   SignOut() {
-    this.angularFireAuth.auth.signOut();
-    this.router.navigateByUrl('/');
+    localStorage.removeItem(environment.token);
+    this.loggedIn.next(false);
   }
 }
