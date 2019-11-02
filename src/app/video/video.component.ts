@@ -26,10 +26,10 @@ export class VideoComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.socketService.voteChange();
-    this.socket = this.socketService.data.asObservable().subscribe(data => {
-      console.log('data');
-    });
+    // this.socketService.voteChange();
+    // this.socket = this.socketService.data.asObservable().subscribe(data => {
+    //   console.log('data');
+    // });
     this.auth = this.authService.loggedIn.subscribe(m => {
       if (m) {
         const userId = Number(this.authService.id());
@@ -87,7 +87,6 @@ export class VideoComponent implements OnInit, OnDestroy {
           item.like = 0;
           item.dislike = 0;
         }
-        console.log('123', item);
         this.video.push(item);
       });
       return res;

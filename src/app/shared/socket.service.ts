@@ -14,14 +14,14 @@ export class SocketService {
 
 
 
-  voteChange() {
-    this.socket = io(this.url);
-    this.socket.on('data', (data: any) => {
-      console.log(data);
-      this.data.next(data);
-    });
-    return () => {
-      this.socket.disconnect();
-    };
-  }
+  // voteChange() {
+  //   this.socket = io(this.url);
+  //   this.socket.on('data', (data: any) => {
+  //     console.log(data);
+  //     this.data.next(data);
+  //   });
+  //   return () => {
+  //     this.socket.disconnect();
+  //   };
+  // }
 }
